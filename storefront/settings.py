@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 import os
 from datetime import timedelta
 from pathlib import Path
+from celery.schedules import crontab
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -92,7 +93,7 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'storefront3',
-        'HOST': 'localhost',
+        'HOST': '127.0.0.1',
         'USER': 'root',
         'PASSWORD': 'Canavar12:'
     }
@@ -175,3 +176,14 @@ DEFAULT_FROM_EMAIL = 'from@hopebuy.com'
 ADMINS = [
     ('Umut', 'admin@hopebuy.com')
 ]
+
+CELERY_BROKER_URL = 'redis://localhost:6379/1'
+CELERY_BEAT_SCHEDULE = {
+    'notify_customer': {
+        'task': 'playground.tasks.notify_customer',
+        # 'schedule': crontab(day_of_week=1, hour=7, minute=30)
+        'schedule': 5,
+        'args': ['Hello World'],
+        # 'kwargs': {}
+    }
+}
